@@ -1,0 +1,21 @@
+# 最新版のnginxをインストール
+- name: nginx install
+  yum:
+    name: nginx
+    state: latest
+
+# nginxの起動、及び自動起動設定
+- name: ensure nginx start
+  systemd:
+    name: nginx.service
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  become: true
+
+# /etc/nginx/nginx.confのkeepalive_timeoutの設定値変更
+- name: nginx modify file
+  replace:
+    dest: /etc/nginx/nginx.conf
+    regexp: 'keepalive_timeout .*'
+    replace: 'keepalive_timeout    100;'
